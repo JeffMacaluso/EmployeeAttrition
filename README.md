@@ -1,5 +1,5 @@
 # EmployeeAttrition
-##Calculating the likelihood of the termination of field employees 
+###Calculating the likelihood of the termination of field employees 
 
 
 This repository includes sections of code used to calculate the likelihood of employee termination.  It is not the complete code, as most of it was specific to the company's SQL database, and parts of the R code repeated itself.
