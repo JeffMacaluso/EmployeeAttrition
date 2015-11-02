@@ -20,15 +20,14 @@ HighPerformer.rfsurv <- rfsrc(Surv(EmploymentLengthMM, Terminated) ~ AvgWeeklyPa
  data = FlightRisk,
  ntime = 5,
  nsplit = 10,
- ntrees = 250,
+ ntree = 250,
  na.action = "na.impute")
  
 # Summary
 HighPerformer.rfsurv
 
-# Plotting OOB Error Rate
-plot(gg_error(HighPerformer.rfsurv)) + 
-coord_cartesian(y = c(.09, .31))
+# Plotting OOB Error Rate and Variable Importance
+plot(HighPerformer.rfsurv)
 
 
 
@@ -36,22 +35,14 @@ coord_cartesian(y = c(.09, .31))
 HighPerformer.rf <- rfsrc(Terminated100 ~ AvgWeeklyPaycheck + ShortTermProductivity + Productivity + Age + TitleInt + ComboRate + Region + RegionProductivity + Rehire + DistrictProductivity + DivisionProductivity + DivisionInt + EmploymentLengthDD + MilesFromSalon
         , data = FlightRisk
         , ntime = 5
-        , ntrees = 250)
+        , ntree = 250)
         
 # Summary
 HighPerformer.rf
 
-# Plotting the OOB error
-gg_e <- gg_error(HighPerformer.rf)
+# Plotting the OOB error and Variable Importance
+plot(HighPerformer.rf)
 
-plot(gg_e)
-
-plot(gg_rfsrc(HighPerformer.rf), alpha = .5) +
-
-coord_cartesian(ylim=c(5, 49))
-
-# Plotting VIMP rankings of independent variables
-plot(gg_vimp(HighPerformer.rf), lbls=st.labs)
 
 # Minimal Depth: assumes variables w/ high impact on the prediction are most frequently split nodes nearest to trunks
 varsel_FlightRisk <- var.select(HighPerformer.rf)
