@@ -16,12 +16,13 @@ strCol <- brewer.pal(3, "Set1")[c(2, 1, 3)]
 
 # Grow and store the random survival forest - using 250 trees as a previous run has shown that there is marginal benefit from getting more
 # ntime = 5 to save on processing power due to hardware constraints
-HighPerformer.rfsurv <- rfsrc(Surv(EmploymentLengthMM, Terminated) ~ AvgWeeklyPaycheck + ShortTermProductivity + Productivity + Age + TitleInt + ComboRate + Region + RegionProductivity + Rehire + DistrictProductivity + DivisionProductivity + DivisionInt + EmploymentLengthMM + MilesFromSalon + Territory,
- data = FlightRisk,
- ntime = 5,
- nsplit = 10,
- ntree = 250,
- na.action = "na.impute")
+# Initial run imputes null values, but future run will handle these differently
+HighPerformer.rfsurv <- rfsrc(Surv(Tenure_Mo, Terminated) ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15
+ ,data = FlightRisk
+ ,ntime = 5
+ ,nsplit = 10
+ ,ntree = 250
+ ,na.action = "na.impute")
  
 # Summary
 HighPerformer.rfsurv
@@ -32,7 +33,7 @@ plot(HighPerformer.rfsurv)
 
 
 # Grow and plot the regular random forest - same logic on the parameters as above applies
-HighPerformer.rf <- rfsrc(Terminated100 ~ AvgWeeklyPaycheck + ShortTermProductivity + Productivity + Age + TitleInt + ComboRate + Region + RegionProductivity + Rehire + DistrictProductivity + DivisionProductivity + DivisionInt + EmploymentLengthDD + MilesFromSalon
+HighPerformer.rf <- rfsrc(Terminated ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16
         , data = FlightRisk
         , ntime = 5
         , ntree = 250)
@@ -60,7 +61,7 @@ gg_v <- gg_variable(HighPerformer.rf)
 xvar <- gg_md$topvars
 plot(gg_v, xvar=xvar, panel = TRUE
                 se = .95, span = 1.2, alpha = 0.4) +
-labs(y = st.labs["Terminated100"], x = "")
+labs(y = st.labs["Terminated"], x = "")
 
 # Plotting partial dependence
 partial_FlightRisk <- plot.variable(HighPerformer.rf,
@@ -71,4 +72,4 @@ partial_FlightRisk <- plot.variable(HighPerformer.rf,
 gg_p <- gg_partial(partial_FlightRisk)
 
 plot(gg_p, xvar = xvar, panel = TRUE, se = FALSE) +
-labs(y = st.labs["Terminated100"], x = "")
+labs(y = st.labs["Terminated"], x = "")
