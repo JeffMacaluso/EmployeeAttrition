@@ -1,31 +1,31 @@
--- Determines the distance between an employee's address and primary salon in miles using geocodes
+-- Determines the distance between an employee's address and primary Store in miles using geocodes
 
 WITH Employee AS (
 SELECT
  EmployeeKey
-, HomeSalon_DimOrganizationStructureSalonKey
+, HomeStore_DimOrganizationStructureStoreKey
 , Longitude
 , Latitude
-FROM Finance.dbo.zFlightRisk FR
-  JOIN DimOperationalStructureEmployee Emp WITH (NOLOCK) ON FR.EmployeeKey = Emp.DimOperationalStructureEmployeeKey
+FROM FlightRisk
+  JOIN Employee ON FlightRisk.EmployeeKey = Employee.DimOperationalStructureEmployeeKey
 WHERE Longitude IS NOT NULL AND Latitude IS NOT NULL
 )
 
-, Salons AS (
+, Stores AS (
 SELECT
- DimOrganizationStructureSalonKey
-, OrgSalonNumber
+ DimOrganizationStructureStoreKey
+, OrgStoreNumber
 , Longitude
 , Latitude
-FROM DimOrganizationStructureSalon WITH (NOLOCK)
+FROM Store 
 WHERE Longitude IS NOT NULL AND Latitude IS NOT NULL
 )
 
 SELECT 
  EmployeeKey
-, (Geography::Point(Employee.Latitude, Employee.Longitude, 4326).STDistance(Geography::Point(Salons.LATITUDE, Salons.LONGITUDE, 4326)))*(0.00062137) as Distance_Miles
+, (Geography::Point(Employee.Latitude, Employee.Longitude, 4326).STDistance(Geography::Point(Stores.LATITUDE, Stores.LONGITUDE, 4326)))*(0.00062137) as Distance_Miles
 
 FROM Employee
-  JOIN Salons ON Employee.HomeSalon_DimOrganizationStructureSalonKey = Salons.DimOrganizationStructureSalonKey
+  JOIN Stores ON Employee.HomeStore_DimOrganizationStructureStoreKey = Stores.DimOrganizationStructureStoreKey
 WHERE 
-(Geography::Point(Employee.Latitude, Employee.Longitude, 4326).STDistance(Geography::Point(Salons.LATITUDE, Salons.LONGITUDE, 4326)))*(0.00062137) < 100
+(Geography::Point(Employee.Latitude, Employee.Longitude, 4326).STDistance(Geography::Point(Stores.LATITUDE, Stores.LONGITUDE, 4326)))*(0.00062137) < 100
