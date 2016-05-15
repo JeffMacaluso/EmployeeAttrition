@@ -1,4 +1,4 @@
--- Determines the distance between an employee's address and primary Store in miles using geocodes
+-- Determines the distance between an employee's address and primary store in miles using geocodes
 
 WITH Employee AS (
 SELECT
