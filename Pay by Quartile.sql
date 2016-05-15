@@ -16,7 +16,7 @@ SELECT
     AS '% Change'
 , (AVG(CASE WHEN FlightRisk < 25 THEN AvgWeeklyPaycheck ELSE NULL END)) 
     AS '<25'
-FROM FlightRisk AS FR
+FROM dbo.FlightRisk AS FR
 WHERE 
  FlightRisk IS NOT NULL
 GROUP BY 
